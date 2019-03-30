@@ -6,11 +6,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 let timer = require('./parts/timer'),
     modal = require('./parts/modal'),
-    modalSixtySeconds = require('./parts/modalSixtySeconds');
+    modalSixtySeconds = require('./parts/modalSixtySeconds'),
+    image = require('./parts/image');
+
 
     timer ();
     modal ();
     modalSixtySeconds ();
+    image();
 
 });
 

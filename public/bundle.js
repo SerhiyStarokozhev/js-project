@@ -1551,11 +1551,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
   var timer = __webpack_require__(/*! ./parts/timer */ "./parts/timer.js"),
       modal = __webpack_require__(/*! ./parts/modal */ "./parts/modal.js"),
-      modalSixtySeconds = __webpack_require__(/*! ./parts/modalSixtySeconds */ "./parts/modalSixtySeconds.js");
+      modalSixtySeconds = __webpack_require__(/*! ./parts/modalSixtySeconds */ "./parts/modalSixtySeconds.js"),
+      image = __webpack_require__(/*! ./parts/image */ "./parts/image.js");
 
   timer();
   modal();
   modalSixtySeconds();
+  image();
 });
 
 if ('NodeList' in window && !NodeList.prototype.forEach) {
@@ -1569,6 +1571,39 @@ if ('NodeList' in window && !NodeList.prototype.forEach) {
     }
   };
 }
+
+/***/ }),
+
+/***/ "./parts/image.js":
+/*!************************!*\
+  !*** ./parts/image.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function image() {
+  var imgPopup = document.createElement('div'),
+      image = document.createElement('img'),
+      srcImg = document.querySelectorAll('.src-img');
+  imgPopup.classList.add('img-popup');
+  image.classList.add('img-content');
+  document.body.appendChild(imgPopup);
+  imgPopup.appendChild(image);
+  srcImg.forEach(function (item) {
+    item.addEventListener('click', function (event) {
+      event.preventDefault();
+      imgPopup.style.display = 'flex';
+      image.src = this.href;
+    });
+  });
+  imgPopup.addEventListener('click', function (event) {
+    if (event.target && event.target.classList.contains('img-popup')) {
+      imgPopup.style.display = 'none';
+    }
+  });
+}
+
+module.exports = image;
 
 /***/ }),
 
@@ -1635,7 +1670,7 @@ module.exports = modal;
 
 function modalSixtySeconds() {
   // Появление окна
-  setTimeout(popupUp, 1000);
+  setTimeout(popupUp, 60000);
 
   function popupUp() {
     var modal = document.querySelector('#popup');
