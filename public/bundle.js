@@ -1552,12 +1552,14 @@ window.addEventListener('DOMContentLoaded', function () {
   var timer = __webpack_require__(/*! ./parts/timer */ "./parts/timer.js"),
       modal = __webpack_require__(/*! ./parts/modal */ "./parts/modal.js"),
       modalSixtySeconds = __webpack_require__(/*! ./parts/modalSixtySeconds */ "./parts/modalSixtySeconds.js"),
-      image = __webpack_require__(/*! ./parts/image */ "./parts/image.js");
+      image = __webpack_require__(/*! ./parts/image */ "./parts/image.js"),
+      tabs = __webpack_require__(/*! ./parts/tabs */ "./parts/tabs.js");
 
   timer();
   modal();
   modalSixtySeconds();
   image();
+  tabs();
 });
 
 if ('NodeList' in window && !NodeList.prototype.forEach) {
@@ -1679,6 +1681,104 @@ function modalSixtySeconds() {
 }
 
 module.exports = modalSixtySeconds;
+
+/***/ }),
+
+/***/ "./parts/tabs.js":
+/*!***********************!*\
+  !*** ./parts/tabs.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function tabs() {
+  //firsttabs
+  var tab = document.querySelectorAll('.tab'),
+      info = document.querySelector('.info-header'),
+      tabContent = document.querySelectorAll('.tabcontent'),
+      link = document.querySelectorAll('.link'),
+      tabImg = document.querySelectorAll('.tabImg'),
+      hideTabContent = function hideTabContent(a) {
+    for (var i = a; i < tabContent.length; i++) {
+      tabContent[i].classList.remove('show');
+      tabContent[i].classList.add('hide');
+      link[i].classList.remove('active');
+    }
+  };
+
+  hideTabContent(1);
+
+  var showTabContent = function showTabContent(b) {
+    if (tabContent[b].classList.contains('hide')) {
+      hideTabContent(0);
+      tabContent[b].classList.remove('hide');
+      tabContent[b].classList.add('show');
+    }
+  };
+
+  info.addEventListener('click', function (event) {
+    var target = event.target,
+        tabs = function tabs(a, c) {
+      if (target && target.classList.contains(a)) {
+        for (var i = 0; i < c.length; i++) {
+          if (target === c[i]) {
+            hideTabContent(0);
+            showTabContent(i);
+            link[i].classList.add('active');
+            break;
+          }
+        }
+      }
+    };
+
+    tabs('tab', tab);
+    tabs('link', link);
+    tabs('tabImg', tabImg);
+  }); //secondstabs
+
+  var infoDec = document.querySelector('.decoration_slider'),
+      decTab = document.querySelectorAll('.decoration-tab'),
+      decLink = document.querySelectorAll('.decoration-link'),
+      decTabContent = document.querySelectorAll('.decTabcontent'),
+      hideDecTabContent = function hideDecTabContent(a) {
+    for (var i = a; i < decTabContent.length; i++) {
+      decTabContent[i].classList.remove('show');
+      decTabContent[i].classList.add('hide');
+      decTab[i].classList.remove('after_click');
+    }
+  };
+
+  hideDecTabContent(1);
+
+  var showDecTabContent = function showDecTabContent(b) {
+    if (decTabContent[b].classList.contains('hide')) {
+      hideDecTabContent(0);
+      decTabContent[b].classList.remove('hide');
+      decTabContent[b].classList.add('show');
+    }
+  };
+
+  infoDec.addEventListener('click', function (event) {
+    var target = event.target,
+        tabs = function tabs(a, c) {
+      if (target && target.classList.contains(a)) {
+        for (var i = 0; i < c.length; i++) {
+          if (target === c[i]) {
+            hideDecTabContent(0);
+            showDecTabContent(i);
+            decTab[i].classList.add('after_click');
+            break;
+          }
+        }
+      }
+    };
+
+    tabs('decoration-tab', decTab);
+    tabs('decoration-link', decLink);
+  });
+}
+
+module.exports = tabs;
 
 /***/ }),
 
