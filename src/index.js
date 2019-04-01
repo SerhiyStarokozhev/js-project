@@ -4,18 +4,22 @@ require('es6-promise').polyfill();
 window.addEventListener('DOMContentLoaded', () => {
 'use strict';
 
-let timer = require('./parts/timer'),
-    modal = require('./parts/modal'),
+let modal = require('./parts/modal'),
+    tabs = require('./parts/tabs'),
     modalSixtySeconds = require('./parts/modalSixtySeconds'),
+    timer = require('./parts/timer'),
+    forms = require('./parts/forms'),
     image = require('./parts/image'),
-    tabs = require('./parts/tabs');
+    calc = require('./parts/calc');
 
 
-    timer ();
     modal ();
-    modalSixtySeconds ();
-    image();
     tabs ();
+    modalSixtySeconds ();
+    timer ();
+    forms ();
+    image ();
+    calc ();
 
 });
 

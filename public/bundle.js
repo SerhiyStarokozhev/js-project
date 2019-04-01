@@ -1549,17 +1549,21 @@ __webpack_require__(/*! es6-promise */ "../node_modules/es6-promise/dist/es6-pro
 window.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  var timer = __webpack_require__(/*! ./parts/timer */ "./parts/timer.js"),
-      modal = __webpack_require__(/*! ./parts/modal */ "./parts/modal.js"),
+  var modal = __webpack_require__(/*! ./parts/modal */ "./parts/modal.js"),
+      tabs = __webpack_require__(/*! ./parts/tabs */ "./parts/tabs.js"),
       modalSixtySeconds = __webpack_require__(/*! ./parts/modalSixtySeconds */ "./parts/modalSixtySeconds.js"),
+      timer = __webpack_require__(/*! ./parts/timer */ "./parts/timer.js"),
+      forms = __webpack_require__(/*! ./parts/forms */ "./parts/forms.js"),
       image = __webpack_require__(/*! ./parts/image */ "./parts/image.js"),
-      tabs = __webpack_require__(/*! ./parts/tabs */ "./parts/tabs.js");
+      calc = __webpack_require__(/*! ./parts/calc */ "./parts/calc.js");
 
-  timer();
   modal();
-  modalSixtySeconds();
-  image();
   tabs();
+  modalSixtySeconds();
+  timer();
+  forms();
+  image();
+  calc();
 });
 
 if ('NodeList' in window && !NodeList.prototype.forEach) {
@@ -1573,6 +1577,310 @@ if ('NodeList' in window && !NodeList.prototype.forEach) {
     }
   };
 }
+
+/***/ }),
+
+/***/ "./parts/calc.js":
+/*!***********************!*\
+  !*** ./parts/calc.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function calc() {
+  var popupCalcForm = document.querySelector('.popup_calc'),
+      popupCalcFormInputs = document.querySelectorAll('.popup_calc input'),
+      popupCalcFormBtn = document.querySelector('button.popup_calc_button'),
+      popupCalcFormBtns = document.querySelectorAll('button.glazing_price_btn.text-uppercase.popup_calc_btn'),
+      popupCalcFormClose = document.querySelector('.popup_calc_close'),
+      previewIcons = document.querySelectorAll("img[class^=type"),
+      previewImage = document.querySelectorAll("img[id^=type"),
+      popupCalcProfile = document.querySelector(".popup_calc_profile"),
+      popupCalcProfileClose = document.querySelector(".popup_calc_profile_close"),
+      checkBoxLabels = document.querySelectorAll(".popup_calc_profile_content label"),
+      checkBoxInputs = document.querySelectorAll(".popup_calc_profile_content input"),
+      showEndCalcFormBtn = document.querySelector(".button.popup_calc_profile_button");
+  var currentCheckBox = 0;
+  var objData = {
+    'width': undefined,
+    'height': undefined,
+    'formBalcon': undefined,
+    'glazingProfile': undefined,
+    'glazingType': undefined,
+    'name': undefined,
+    'phone': undefined
+  };
+
+  function clearObjData() {
+    for (var key in objData) {
+      objData[key] = undefined;
+    }
+  }
+
+  showPreviewIcon(0);
+
+  function showPreviewIcon(index) {
+    for (var i = 0; i < previewIcons.length; ++i) {
+      previewIcons[i].classList.remove('do_image_more');
+      previewImage[i].style.display = 'none';
+    }
+
+    previewIcons[index].classList.add('do_image_more');
+    previewImage[index].style.display = 'inline-block';
+  }
+
+  function getActivePreviewIcon() {
+    for (var i = 0; i < previewIcons.length; ++i) {
+      if (previewIcons[i].classList.contains('do_image_more')) {
+        return i;
+      }
+    }
+  }
+
+  popupCalcFormInputs.forEach(function (item) {
+    item.addEventListener('keypress', function (event) {
+      event.preventDefault();
+
+      if (/\d/.test(event.key)) {
+        this.value += event.key;
+        return;
+      } else {
+        return;
+      }
+    });
+    item.addEventListener('change', function (event) {
+      event.preventDefault();
+
+      if (/\D/.test(this.value)) {
+        item.value = "";
+        return;
+      } else {
+        return;
+      }
+    });
+  });
+  popupCalcFormBtns.forEach(function (item) {
+    item.addEventListener('click', function () {
+      popupCalcForm.style.display = 'block';
+      document.body.style.overflow = "hidden";
+      popupCalcFormClose.addEventListener('click', function () {
+        clearObjData();
+        popupCalcFormInputs[0].value = null;
+        popupCalcFormInputs[1].value = null;
+        showPreviewIcon(0);
+        popupCalcForm.style.display = 'none';
+        document.body.style.overflow = "";
+      });
+      previewIcons.forEach(function (item, index) {
+        item.addEventListener('click', function (event) {
+          event.preventDefault();
+          showPreviewIcon(index);
+        });
+      });
+      popupCalcFormBtn.addEventListener('click', function () {
+        popupCalcForm.style.display = 'none';
+        objData.width = +popupCalcFormInputs[0].value;
+        objData.height = +popupCalcFormInputs[1].value;
+        objData.formBalcon = previewIcons[getActivePreviewIcon()].getAttribute('alt');
+        popupCalcFormInputs[0].value = null;
+        popupCalcFormInputs[1].value = null;
+        showPreviewIcon(0);
+        popupCalcProfile.style.display = 'block';
+      });
+    });
+  });
+  popupCalcProfileClose.addEventListener('click', function () {
+    clearObjData();
+    document.getElementById('view_type').selectedIndex = 0;
+
+    for (var i = 0; i < checkBoxInputs.length; ++i) {
+      checkBoxInputs[i].checked = false;
+    }
+
+    popupCalcProfile.style.display = 'none';
+    document.body.style.overflow = "";
+  });
+  checkBoxLabels.forEach(function (item, index) {
+    item.addEventListener('click', function () {
+      currentCheckBox = index;
+      checkBoxInputs[(index + 1) % 2].checked = false;
+    });
+  });
+  var popupCalcEndClose = document.querySelector('.popup_calc_end_close'),
+      popupCalcEndForm = document.querySelector(".popup_calc_end"),
+      popupCalcEndFormForm = document.querySelector(".popup_calc_end form");
+  showEndCalcFormBtn.addEventListener('click', function () {
+    var selectedGlazingType = document.getElementById('view_type').value;
+    var glazingProfile = document.querySelectorAll('.checkbox-custom')[currentCheckBox].getAttribute('id');
+    objData.glazingProfile = glazingProfile;
+    objData.glazingType = selectedGlazingType;
+
+    if (selectedGlazingType == 'plastic' && glazingProfile == 'cold') {
+      alert('Для данного типа остекления можно вырать только теплый профиль');
+      return;
+    }
+
+    popupCalcProfile.style.display = 'none';
+    document.getElementById('view_type').selectedIndex = 0;
+
+    for (var i = 0; i < checkBoxInputs.length; ++i) {
+      checkBoxInputs[i].checked = false;
+    }
+
+    popupCalcEndForm.style.display = 'block';
+    document.body.style.overflow = "hidden";
+  });
+  popupCalcEndClose.addEventListener('click', function () {
+    clearObjData();
+    popupCalcEndForm.style.display = 'none';
+    document.body.style.overflow = "";
+  });
+  var popupCalcEndSubmitBtn = document.querySelector('.popup_calc_end button[name="submit"]');
+  popupCalcEndSubmitBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    objData.name = document.querySelector('.popup_calc_end input[name="user_name"]').value;
+    objData.phone = document.querySelector('.popup_calc_end input[name="user_phone"]').value;
+    postData(objData, popupCalcEndFormForm);
+  });
+
+  function postData(obj, form) {
+    var message = {
+      loading: 'Загрузка...',
+      success: 'Спасибо! Скоро мы с вами свяжемся!!!',
+      failure: 'Что-то пошло не так'
+    };
+    var inputs = document.querySelectorAll(".popup_calc_end form input");
+    var statusMessage = document.createElement('div');
+    statusMessage.classList.add('status');
+    form.appendChild(statusMessage);
+    statusMessage.style.display = 'block';
+    var request = new XMLHttpRequest();
+    request.open('POST', 'server.php');
+    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    var jsonData = JSON.stringify(obj);
+    request.send(jsonData);
+    request.addEventListener('readystatechange', function () {
+      if (request.readyState < 4) {
+        statusMessage.innerHTML = message.loading;
+      } else if (request.readyState === 4 && request.status == 200) {
+        statusMessage.innerHTML = message.success;
+      } else {
+        statusMessage.innerHTML = message.failure;
+      }
+
+      clearInput();
+
+      function clearInput() {
+        for (var i = 0; i < inputs.length; ++i) {
+          inputs[i].value = '';
+        }
+      }
+    });
+  }
+}
+
+module.exports = calc;
+
+/***/ }),
+
+/***/ "./parts/forms.js":
+/*!************************!*\
+  !*** ./parts/forms.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function forms() {
+  var mainForms = document.querySelectorAll('.main_form'),
+      formInput = document.querySelectorAll('.form_input'),
+      message = {
+    sending: 'Выполняется отправка...',
+    success: 'Данные успешно отправлены!',
+    failure: 'Что-то пошло не так...'
+  },
+      statusMessage = document.createElement('div'),
+      popupForm = document.querySelector('.popup .form'),
+      popupEngineerForm = document.querySelector('.popup_engineer .form'),
+      calcEndForm = document.querySelector('.popup_calc_end .form');
+  statusMessage.classList.add('status-message');
+
+  for (var i = 0; i < formInput.length; i++) {
+    if (formInput[i].getAttribute('name') === 'user_phone') {
+      formInput[i].addEventListener('keyup', function () {
+        if (this.value.length > 11) {
+          this.value = this.value.substring(0, 12);
+        }
+
+        this.value = this.value.replace(/[^0-9]+/g, '');
+      });
+    }
+  }
+
+  mainForms.forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      Send(form);
+    });
+  });
+  popupForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    Send(popupForm);
+  });
+  popupEngineerForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    Send(popupEngineerForm);
+  });
+  calcEndForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    Send(calcEndForm);
+  });
+
+  function Send(form) {
+    var SendForm = form,
+        SendFormInput = SendForm.querySelectorAll('input');
+    SendForm.appendChild(statusMessage);
+    var formData = new FormData(SendForm);
+
+    function postData() {
+      return new Promise(function (resolve, reject) {
+        var request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        var obj = {};
+        formData.forEach(function (value, key) {
+          obj[key] = value;
+        });
+        var json = JSON.stringify(obj);
+        request.send(json);
+        request.addEventListener('readystatechange', function () {
+          if (request.readyState < 4) {
+            resolve();
+          } else if (request.readyState === 4 && request.status == 200) {
+            resolve();
+          } else {
+            reject();
+          }
+        });
+      });
+    }
+
+    function clearInput() {
+      SendFormInput.forEach(function (input) {
+        input.value = '';
+      });
+    }
+
+    postData().then(function () {
+      return statusMessage.innerHTML = message.sending;
+    }).then(function () {
+      return statusMessage.innerHTML = message.success;
+    }).catch(function () {
+      return statusMessage.innerHTML = message.failure;
+    }).then(clearInput());
+  }
+}
+
+module.exports = forms;
 
 /***/ }),
 
@@ -1619,16 +1927,16 @@ module.exports = image;
 function modal() {
   // Modal window for button "Вызвать замерщика"
   var btn = document.querySelector('.header_btn'),
-      popupEngineer = document.querySelector('.popup_engineer'),
+      testo = document.querySelector('.popup_engineer'),
       overlay = document.querySelector('.overlay');
   btn.addEventListener('click', function () {
-    popupEngineer.style.display = 'block';
+    testo.style.display = 'block';
     this.classList.add('more-splash');
     document.body.style.overflow = 'hidden';
   });
   overlay.addEventListener('click', function (e) {
     if (!e.target.closest('.popup_form')) {
-      popupEngineer.style.display = 'none';
+      testo.style.display = 'none';
       btn.classList.remove('more-splash');
       document.body.style.overflow = '';
     }
@@ -1760,10 +2068,10 @@ function tabs() {
 
   infoDec.addEventListener('click', function (event) {
     var target = event.target,
-        tabs = function tabs(a, c) {
+        tabs = function tabs(a, b) {
       if (target && target.classList.contains(a)) {
-        for (var i = 0; i < c.length; i++) {
-          if (target === c[i]) {
+        for (var i = 0; i < b.length; i++) {
+          if (target === b[i]) {
             hideDecTabContent(0);
             showDecTabContent(i);
             decTab[i].classList.add('after_click');

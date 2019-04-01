@@ -3,18 +3,18 @@ function modal() {
     // Modal window for button "Вызвать замерщика"
 
     let btn = document.querySelector('.header_btn'),
-        popupEngineer = document.querySelector('.popup_engineer'),
+        testo = document.querySelector('.popup_engineer'),
         overlay = document.querySelector('.overlay');
 
     btn.addEventListener('click', function() {
-        popupEngineer.style.display = 'block';
+        testo.style.display = 'block';
         this.classList.add('more-splash');
         document.body.style.overflow = 'hidden';
     });
 
     overlay.addEventListener('click', function(e) {
         if (!e.target.closest('.popup_form')) {
-            popupEngineer.style.display = 'none';
+            testo.style.display = 'none';
             btn.classList.remove('more-splash');
             document.body.style.overflow = '';
         }
