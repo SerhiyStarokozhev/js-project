@@ -1797,16 +1797,11 @@ function calc() {
         statusMessage.innerHTML = message.loading;
       } else if (request.readyState === 4 && request.status == 200) {
         statusMessage.innerHTML = message.success;
-      } else if (!inputs[0].validity.valid || !inputs[1].validity.valid) {
-        alert(message.inp);
       } else {
         statusMessage.innerHTML = message.failure;
       }
 
       clearInput();
-      setTimeout(function () {
-        form.removeChild(statusMessage);
-      }, 1000);
 
       function clearInput() {
         for (var i = 0; i < inputs.length; ++i) {
@@ -1814,6 +1809,12 @@ function calc() {
         }
       }
     });
+
+    if (statusMessage.classList == 'status') {
+      setTimeout(function () {
+        form.removeChild(statusMessage);
+      }, 3000);
+    }
   }
 }
 

@@ -162,11 +162,11 @@ function calc() {
         }
     });
 
-
     popupCalcEndClose.addEventListener('click', () => {
         clearObjData();
         popupCalcEndForm.style.display = 'none';
         document.body.style.overflow = "";
+
     });
     let popupCalcEndSubmitBtn = document.querySelector('.popup_calc_end button[name="submit"]');
 
@@ -202,31 +202,26 @@ function calc() {
         }
         request.addEventListener('readystatechange', () => {
             if (request.readyState < 4) {
-
                 statusMessage.innerHTML = message.loading;
-                
             } else if (request.readyState === 4 && request.status == 200) {
                 statusMessage.innerHTML = message.success;
-            } 
-            else if (!inputs[0].validity.valid || !inputs[1].validity.valid) {
-                alert(message.inp);
-            } 
-            else {
+            } else  {
                 statusMessage.innerHTML = message.failure;
             }
 
-            clearInput();
+            clearInput();  
+            function clearInput() {
+                for (let i = 0; i < inputs.length; ++i) {
+                    inputs[i].value = '';
+                }
+            }
+        });
+        if(statusMessage.classList == 'status'){
             setTimeout(() => {
                 form.removeChild(statusMessage);
-            }, 1000);  
-
-                function clearInput() {
-                    for (let i = 0; i < inputs.length; ++i) {
-                        inputs[i].value = '';
-                    }
-                }
-            });
+            }, 3000);  
         }
+    }
 }
 
 module.exports = calc;
