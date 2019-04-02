@@ -1599,7 +1599,10 @@ function calc() {
       popupCalcProfileClose = document.querySelector(".popup_calc_profile_close"),
       checkBoxLabels = document.querySelectorAll(".popup_calc_profile_content label"),
       checkBoxInputs = document.querySelectorAll(".popup_calc_profile_content input"),
-      showEndCalcFormBtn = document.querySelector(".button.popup_calc_profile_button");
+      showEndCalcFormBtn = document.querySelector(".button.popup_calc_profile_button"),
+      inputHeight = document.getElementById('height'),
+      inputWidth = document.getElementById('width'),
+      popupCalcEndForm = document.querySelector(".popup_calc_end");
   var currentCheckBox = 0;
   var objData = {
     'width': undefined,
@@ -1678,14 +1681,17 @@ function calc() {
         });
       });
       popupCalcFormBtn.addEventListener('click', function () {
-        popupCalcForm.style.display = 'none';
-        objData.width = +popupCalcFormInputs[0].value;
-        objData.height = +popupCalcFormInputs[1].value;
-        objData.formBalcon = previewIcons[getActivePreviewIcon()].getAttribute('alt');
-        popupCalcFormInputs[0].value = null;
-        popupCalcFormInputs[1].value = null;
-        showPreviewIcon(0);
-        popupCalcProfile.style.display = 'block';
+        if (inputHeight.validity.valid && inputWidth.validity.valid) {
+          popupCalcForm.style.display = 'none';
+          objData.width = +popupCalcFormInputs[0].value;
+          objData.height = +popupCalcFormInputs[1].value;
+          objData.formBalcon = previewIcons[getActivePreviewIcon()].getAttribute('alt');
+          showPreviewIcon(0);
+          popupCalcProfile.style.display = 'block';
+        }
+
+        inputHeight.value = null;
+        inputWidth.value = null;
       });
     });
   });
@@ -1707,28 +1713,33 @@ function calc() {
     });
   });
   var popupCalcEndClose = document.querySelector('.popup_calc_end_close'),
-      popupCalcEndForm = document.querySelector(".popup_calc_end"),
       popupCalcEndFormForm = document.querySelector(".popup_calc_end form");
   showEndCalcFormBtn.addEventListener('click', function () {
-    var selectedGlazingType = document.getElementById('view_type').value;
-    var glazingProfile = document.querySelectorAll('.checkbox-custom')[currentCheckBox].getAttribute('id');
-    objData.glazingProfile = glazingProfile;
-    objData.glazingType = selectedGlazingType;
+    var selectedGlazingType = document.getElementById('view_type').value,
+        glazingProfile = document.querySelectorAll('.checkbox-custom')[currentCheckBox].getAttribute('id'),
+        checkBox = document.querySelectorAll('.checkbox');
 
-    if (selectedGlazingType == 'plastic' && glazingProfile == 'cold') {
-      alert('Для данного типа остекления можно вырать только теплый профиль');
-      return;
+    if (!checkBox[0].checked && !checkBox[1].checked) {
+      alert('Укажите профиль!');
+    } else {
+      objData.glazingProfile = glazingProfile;
+      objData.glazingType = selectedGlazingType;
+
+      if (selectedGlazingType == 'plastic' && glazingProfile == 'cold') {
+        alert('Для данного типа остекления можно вырать только теплый профиль');
+        return;
+      }
+
+      popupCalcProfile.style.display = 'none';
+      document.getElementById('view_type').selectedIndex = 0;
+
+      for (var i = 0; i < checkBoxInputs.length; ++i) {
+        checkBoxInputs[i].checked = false;
+      }
+
+      popupCalcEndForm.style.display = 'block';
+      document.body.style.overflow = "hidden";
     }
-
-    popupCalcProfile.style.display = 'none';
-    document.getElementById('view_type').selectedIndex = 0;
-
-    for (var i = 0; i < checkBoxInputs.length; ++i) {
-      checkBoxInputs[i].checked = false;
-    }
-
-    popupCalcEndForm.style.display = 'block';
-    document.body.style.overflow = "hidden";
   });
   popupCalcEndClose.addEventListener('click', function () {
     clearObjData();
@@ -1758,17 +1769,28 @@ function calc() {
     request.open('POST', 'server.php');
     request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
     var jsonData = JSON.stringify(obj);
-    request.send(jsonData);
+
+    if (!inputs[0].validity.valid || !inputs[1].validity.valid) {
+      alert('Заполните данные');
+    } else {
+      request.send(jsonData);
+    }
+
     request.addEventListener('readystatechange', function () {
       if (request.readyState < 4) {
         statusMessage.innerHTML = message.loading;
       } else if (request.readyState === 4 && request.status == 200) {
         statusMessage.innerHTML = message.success;
+      } else if (!inputs[0].validity.valid || !inputs[1].validity.valid) {
+        alert(message.inp);
       } else {
         statusMessage.innerHTML = message.failure;
       }
 
       clearInput();
+      setTimeout(function () {
+        form.removeChild(statusMessage);
+      }, 1000);
 
       function clearInput() {
         for (var i = 0; i < inputs.length; ++i) {

@@ -11,7 +11,10 @@ function calc() {
         popupCalcProfileClose = document.querySelector(".popup_calc_profile_close"),
         checkBoxLabels = document.querySelectorAll(".popup_calc_profile_content label"),
         checkBoxInputs = document.querySelectorAll(".popup_calc_profile_content input"),
-        showEndCalcFormBtn = document.querySelector(".button.popup_calc_profile_button");
+        showEndCalcFormBtn = document.querySelector(".button.popup_calc_profile_button"),
+        inputHeight = document.getElementById('height'),
+        inputWidth = document.getElementById('width'),
+        popupCalcEndForm = document.querySelector(".popup_calc_end");
 
     let currentCheckBox = 0;
     let objData = {
@@ -31,7 +34,6 @@ function calc() {
     }
 
     showPreviewIcon(0);
-
 
     function showPreviewIcon(index) {
         for (let i = 0; i < previewIcons.length; ++i) {
@@ -93,17 +95,19 @@ function calc() {
             });
 
             popupCalcFormBtn.addEventListener('click', () => {
-                popupCalcForm.style.display = 'none';
+                if (inputHeight.validity.valid && inputWidth.validity.valid) {
+                    popupCalcForm.style.display = 'none';
+                    objData.width = +popupCalcFormInputs[0].value;
+                    objData.height = +popupCalcFormInputs[1].value;
+                    objData.formBalcon = previewIcons[getActivePreviewIcon()].getAttribute('alt');
+                    showPreviewIcon(0);
+                    
+                    popupCalcProfile.style.display = 'block';
+                }
+                inputHeight.value = null;
+                inputWidth.value = null;
+                
 
-                objData.width = +popupCalcFormInputs[0].value;
-                objData.height = +popupCalcFormInputs[1].value;
-                objData.formBalcon = previewIcons[getActivePreviewIcon()].getAttribute('alt');
-
-                popupCalcFormInputs[0].value = null;
-                popupCalcFormInputs[1].value = null;
-                showPreviewIcon(0);
-
-                popupCalcProfile.style.display = 'block';
             });
         });
     });
@@ -125,15 +129,20 @@ function calc() {
     });
 
     let popupCalcEndClose = document.querySelector('.popup_calc_end_close'),
-        popupCalcEndForm = document.querySelector(".popup_calc_end"),
         popupCalcEndFormForm = document.querySelector(".popup_calc_end form");
 
 
     showEndCalcFormBtn.addEventListener('click', () => {
-        let selectedGlazingType = document.getElementById('view_type').value;
-        let glazingProfile = document.querySelectorAll('.checkbox-custom')[currentCheckBox].getAttribute('id');
-        objData.glazingProfile = glazingProfile;
-        objData.glazingType = selectedGlazingType;
+        let selectedGlazingType = document.getElementById('view_type').value,
+            glazingProfile = document.querySelectorAll('.checkbox-custom')[currentCheckBox].getAttribute('id'),
+            checkBox = document.querySelectorAll('.checkbox');
+
+        if (!checkBox[0].checked && !checkBox[1].checked) {
+            alert('Укажите профиль!');
+        } else {
+            objData.glazingProfile = glazingProfile;
+            objData.glazingType = selectedGlazingType;
+ 
 
         if (selectedGlazingType == 'plastic' && glazingProfile == 'cold') {
             alert('Для данного типа остекления можно вырать только теплый профиль');
@@ -149,14 +158,19 @@ function calc() {
 
         popupCalcEndForm.style.display = 'block';
         document.body.style.overflow = "hidden";
+
+        }
     });
+
+
     popupCalcEndClose.addEventListener('click', () => {
         clearObjData();
         popupCalcEndForm.style.display = 'none';
         document.body.style.overflow = "";
     });
     let popupCalcEndSubmitBtn = document.querySelector('.popup_calc_end button[name="submit"]');
-    popupCalcEndSubmitBtn.addEventListener('click', (event) => {
+
+        popupCalcEndSubmitBtn.addEventListener('click', (event) => {
         event.preventDefault();
         objData.name = document.querySelector('.popup_calc_end input[name="user_name"]').value;
         objData.phone = document.querySelector('.popup_calc_end input[name="user_phone"]').value;
@@ -181,25 +195,38 @@ function calc() {
 
         let jsonData = JSON.stringify(obj);
 
-        request.send(jsonData);
-
+        if (!inputs[0].validity.valid || !inputs[1].validity.valid){
+            alert('Заполните данные');
+        }else {
+            request.send(jsonData);
+        }
         request.addEventListener('readystatechange', () => {
             if (request.readyState < 4) {
+
                 statusMessage.innerHTML = message.loading;
+                
             } else if (request.readyState === 4 && request.status == 200) {
                 statusMessage.innerHTML = message.success;
-            } else {
+            } 
+            else if (!inputs[0].validity.valid || !inputs[1].validity.valid) {
+                alert(message.inp);
+            } 
+            else {
                 statusMessage.innerHTML = message.failure;
             }
-            clearInput();
 
-            function clearInput() {
-                for (let i = 0; i < inputs.length; ++i) {
-                    inputs[i].value = '';
+            clearInput();
+            setTimeout(() => {
+                form.removeChild(statusMessage);
+            }, 1000);  
+
+                function clearInput() {
+                    for (let i = 0; i < inputs.length; ++i) {
+                        inputs[i].value = '';
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 }
 
 module.exports = calc;
