@@ -1578,6 +1578,22 @@ if ('NodeList' in window && !NodeList.prototype.forEach) {
   };
 }
 
+(function (e) {
+  e.closest = e.closest || function (css) {
+    var node = this;
+
+    while (node) {
+      if (node.matches(css)) return node;else node = node.parentElement;
+    }
+
+    return null;
+  };
+})(Element.prototype);
+
+if (!Element.prototype.matches) {
+  Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+}
+
 /***/ }),
 
 /***/ "./parts/calc.js":
@@ -1952,7 +1968,7 @@ function modal() {
       testo = document.querySelector('.popup_engineer'),
       overlay = document.querySelector('.overlay');
   btn.addEventListener('click', function () {
-    testo.style.display = 'block';
+    testo.style.display = 'flex';
     this.classList.add('more-splash');
     document.body.style.overflow = 'hidden';
   });
@@ -1971,7 +1987,7 @@ function modal() {
   var _loop = function _loop(i) {
     phoneLink[i].addEventListener('click', function (e) {
       e.preventDefault();
-      popup.style.display = 'block';
+      popup.style.display = 'flex';
       this.classList.add('more-splash');
       document.body.style.overflow = 'hidden';
     });
@@ -2121,10 +2137,10 @@ module.exports = tabs;
 
 function timer() {
   // Timer
-  var deadline = '2019-12-18 00:00:00';
+  var deadline = Date.UTC(2019, 12, 18);
 
   function getTimeRemaining(endtime) {
-    var t = Date.parse(endtime) - Date.parse(new Date()),
+    var t = endtime - new Date(),
         seconds = Math.floor(t / 1000 % 60),
         minutes = Math.floor(t / 1000 / 60 % 60),
         hours = Math.floor(t / (1000 * 60 * 60) % 60),

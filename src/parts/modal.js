@@ -7,7 +7,7 @@ function modal() {
         overlay = document.querySelector('.overlay');
 
     btn.addEventListener('click', function() {
-        testo.style.display = 'block';
+        testo.style.display = 'flex';
         this.classList.add('more-splash');
         document.body.style.overflow = 'hidden';
     });
@@ -31,7 +31,7 @@ function modal() {
 
         phoneLink[i].addEventListener('click', function(e) {
             e.preventDefault();
-            popup.style.display = 'block';
+            popup.style.display = 'flex';
             this.classList.add('more-splash');
             document.body.style.overflow = 'hidden';
         });

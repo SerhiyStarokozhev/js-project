@@ -2,10 +2,10 @@ function timer() {
 
     // Timer
 
-    let deadline = '2019-12-18 00:00:00';
+    let deadline = Date.UTC(2019, 12, 18);
 
     function getTimeRemaining(endtime) {
-        let t = Date.parse(endtime) - Date.parse(new Date()),
+        let t = endtime - new Date(),
             seconds = Math.floor((t/1000) % 60),
             minutes = Math.floor((t/1000/60) % 60),
             hours = Math.floor((t/(1000*60*60)) % 60),
