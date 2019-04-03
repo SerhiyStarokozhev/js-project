@@ -17,7 +17,7 @@ function image() {
       });
     });
     
-    imgPopup.addEventListener('click', event => {
+    imgPopup.addEventListener('click', (event) => {
       if (event.target && event.target.classList.contains('img-popup')) {
         imgPopup.style.display = 'none';
       }

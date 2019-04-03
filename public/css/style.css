@@ -1511,6 +1511,12 @@ textarea:focus {
   animation-duration: 0.6s;
 }
 
+.click_link {
+border: none !important;
+text-decoration: none !important;
+color: #0089cd !important;
+}
+
 @-webkit-keyframes zoom {
   from {-webkit-transform:scale(0)} 
   to {-webkit-transform:scale(1)}

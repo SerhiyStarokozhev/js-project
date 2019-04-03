@@ -12,7 +12,7 @@ function modal() {
         document.body.style.overflow = 'hidden';
     });
 
-    overlay.addEventListener('click', function(e) {
+    overlay.addEventListener('click', (e) => {
         if (!e.target.closest('.popup_form')) {
             testo.style.display = 'none';
             btn.classList.remove('more-splash');

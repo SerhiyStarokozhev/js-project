@@ -54,7 +54,7 @@ function forms() {
     let formData = new FormData(SendForm);
 
     function postData() {
-      return new Promise(function (resolve, reject) {
+      return new Promise( (resolve, reject) => {
         let request = new XMLHttpRequest();
         request.open('POST', 'server.php');
         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -67,7 +67,7 @@ function forms() {
         let json = JSON.stringify(obj);
         request.send(json);
 
-        request.addEventListener('readystatechange', function () {
+        request.addEventListener('readystatechange', () => {
           if (request.readyState < 4) {
             resolve();
           } else if (request.readyState === 4 && request.status == 200) {

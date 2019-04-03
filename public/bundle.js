@@ -1609,8 +1609,8 @@ function calc() {
       popupCalcFormBtn = document.querySelector('button.popup_calc_button'),
       popupCalcFormBtns = document.querySelectorAll('button.glazing_price_btn.text-uppercase.popup_calc_btn'),
       popupCalcFormClose = document.querySelector('.popup_calc_close'),
-      previewIcons = document.querySelectorAll("img[class^=type"),
-      previewImage = document.querySelectorAll("img[id^=type"),
+      previewIcons = document.querySelectorAll(".balcon_icons > a > img"),
+      previewImage = document.querySelectorAll(".big_img > img"),
       popupCalcProfile = document.querySelector(".popup_calc_profile"),
       popupCalcProfileClose = document.querySelector(".popup_calc_profile_close"),
       checkBoxLabels = document.querySelectorAll(".popup_calc_profile_content label"),
@@ -2087,11 +2087,14 @@ function tabs() {
       decTab = document.querySelectorAll('.decoration-tab'),
       decLink = document.querySelectorAll('.decoration-link'),
       decTabContent = document.querySelectorAll('.decTabcontent'),
-      hideDecTabContent = function hideDecTabContent(a) {
+      dLink = document.querySelectorAll(".d_link > a");
+
+  hideDecTabContent = function hideDecTabContent(a) {
     for (var i = a; i < decTabContent.length; i++) {
       decTabContent[i].classList.remove('show');
       decTabContent[i].classList.add('hide');
       decTab[i].classList.remove('after_click');
+      dLink[i].classList.remove('click_link');
     }
   };
 
@@ -2100,6 +2103,7 @@ function tabs() {
   var showDecTabContent = function showDecTabContent(b) {
     if (decTabContent[b].classList.contains('hide')) {
       hideDecTabContent(0);
+      dLink[b].classList.add('click_link');
       decTabContent[b].classList.remove('hide');
       decTabContent[b].classList.add('show');
     }
