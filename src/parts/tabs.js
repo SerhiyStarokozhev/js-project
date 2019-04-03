@@ -5,7 +5,7 @@ function tabs() {
         tabContent = document.querySelectorAll('.tabcontent'),
         link = document.querySelectorAll('.link'),
         tabImg = document.querySelectorAll('.tabImg'),
-        hideTabContent = a => {
+        hideTabContent = (a) => {
       for (let i = a; i < tabContent.length; i++) {
         tabContent[i].classList.remove('show');
         tabContent[i].classList.add('hide');
@@ -47,11 +47,14 @@ function tabs() {
         decTab = document.querySelectorAll('.decoration-tab'),
         decLink = document.querySelectorAll('.decoration-link'),
         decTabContent = document.querySelectorAll('.decTabcontent'),
-        hideDecTabContent = (a) => {
+        dLink = document.querySelectorAll(".d_link > a");
+        
+    hideDecTabContent = (a) => {
       for (let i = a; i < decTabContent.length; i++) {
         decTabContent[i].classList.remove('show');
         decTabContent[i].classList.add('hide');
         decTab[i].classList.remove('after_click');
+        dLink[i].classList.remove('click_link');
       }
     };
   
@@ -60,6 +63,7 @@ function tabs() {
     let showDecTabContent = (b) => {
       if (decTabContent[b].classList.contains('hide')) {
         hideDecTabContent(0);
+        dLink[b].classList.add('click_link');
         decTabContent[b].classList.remove('hide');
         decTabContent[b].classList.add('show');
       }
